@@ -12,9 +12,23 @@
     <div class="container">
         <h1>Shopping List</h1>
         <form id="js-shopping-list-form">
-            <label for="shopping-list-entry">Add an item</label>
-            <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
+            <label for="shopping-list-entry">Search or Add</label>
+            <input id="dataInput" list="shopping-list-entry" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
             <button type="submit">Add item</button>
+            <fieldset class="js-shopping-list-filter">
+              <div>
+                  <input type="radio" id="showAll" class="js-filter-switch" name="shopping-list-filter" checked />
+                  <label for="showall">Show all</label>
+              </div>              
+              <div>
+                <input type="radio" id="showChecked" class="js-filter-switch" name="shopping-list-filter" />
+                <label for="unchecked">Show checked</label>
+              </div>
+              <div>
+                <input type="radio" id="showUnchecked" class="js-filter-switch" name="shopping-list-filter"  />
+                <label for="unchecked">Show unchecked</label>
+              </div>
+            </fieldset>
         </form>
         <ul class="shopping-list js-shopping-list">
         </ul>
