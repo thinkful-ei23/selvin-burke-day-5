@@ -141,19 +141,25 @@ function handleItemNameClicked() {
     toggleItemNameInput(itemIndex);
     renderShoppingList();
     $('.js-shopping-list input').focus();
-    $('.js-shopping-list').on('focusout, blur', `input.js-shopping-entry-name`, event => {
-      console.log('`focusout` ran');
-      let newInput = $('input.js-shopping-entry-name').val();
+  });
+  $('.js-shopping-list').on('blur, focusout', `input.js-shopping-entry-name`, event => {
+    console.log('`focusout` ran');
+    const itemIndex = getItemIndexFromElement(event.currentTarget);      
+    let newInput = $('input.js-shopping-entry-name').val();
+    if (newInput) {
       console.log(`newInput: ${newInput} length = ${newInput.length}`);
       if (newInput.length === 0 ) {
         STORE.items[itemIndex].editable = false;
       } else {
-        STORE.items[itemIndex].name = newInput;
         let foundItem = searchItems(newInput);
         console.log(`foundItem: ${foundItem} | len: ${foundItem.length}`);
+        if (foundItem.length === 0) {
+          STORE.items[itemIndex].name = newInput;
+        }        
       }
-      renderShoppingList();
-    });
+    }
+    STORE.items[itemIndex].editable = false;
+    renderShoppingList();
   });
 }
 
