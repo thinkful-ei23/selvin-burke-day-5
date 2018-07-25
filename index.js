@@ -19,7 +19,7 @@ function generateItemElement(item, itemIndex, template) {
   } else {
     filterClass="";
   }
-  console.log(`item.editable: ${item.editable}`);
+
   if (item.editable === true){
     return `
     <li class="js-item-index-element" ${filterClass} data-item-index="${itemIndex}">
@@ -123,12 +123,7 @@ function toggleItemNameInput(itemIndex) {
   STORE.items[itemIndex].editable = !STORE.items[itemIndex].editable;
 }
 
-function captureNewName(itemIndex) {
-  console.log(`function captureNewName fired for itemIndex: ${itemIndex} `);
-  $('.js-shopping-list').on('focusout', `.js-shopping-entry-name`, event => {
-   // event.stopPropagation();
-  });
-}
+
 
 $('input.js-shopping-entry-name').keyup(function(e){
   console.log(`e.keycode: ${e.keycode}`);
@@ -137,7 +132,6 @@ function handleItemNameClicked() {
   $('.js-shopping-list').on('click', `.js-shopping-item`, event => {
     console.log('`handleItemNameClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    console.log(`itemIndex: ${itemIndex}`);
     toggleItemNameInput(itemIndex);
     renderShoppingList();
     $('.js-shopping-list input').focus();
@@ -147,12 +141,10 @@ function handleItemNameClicked() {
     const itemIndex = getItemIndexFromElement(event.currentTarget);      
     let newInput = $('input.js-shopping-entry-name').val();
     if (newInput) {
-      console.log(`newInput: ${newInput} length = ${newInput.length}`);
       if (newInput.length === 0 ) {
         STORE.items[itemIndex].editable = false;
       } else {
         let foundItem = searchItems(newInput);
-        console.log(`foundItem: ${foundItem} | len: ${foundItem.length}`);
         if (foundItem.length === 0) {
           STORE.items[itemIndex].name = newInput;
         }        
@@ -160,6 +152,14 @@ function handleItemNameClicked() {
     }
     STORE.items[itemIndex].editable = false;
     renderShoppingList();
+  });
+  // treat "enter" as 'Tab' for input
+  $('.js-shopping-list').on('keypress', 'input.js-shopping-entry-name', event => {      
+    if (event.keyCode == 13) {
+      alert('enter key');
+      $(this).trigger('focusout');
+      //event.preventDefault();
+    }
   });
 }
 
@@ -172,8 +172,6 @@ function searchItems(searchItem){
 function handleKeySearch() {
   $('#dataInput').keyup(function(e){
     let searchInput = $('#dataInput').val();
-    //console.log(`#dataInput: ${$('#dataInput').val()} | $('.js-shopping-list-entry').val(): ${$('.js-shopping-list-entry').val()}`);
-    console.log(`Search input length: ${searchInput.length}`)
     //retrieve the items that have the search string in the title
     if (searchInput.length > 0){
       //get all items that contain this string in the name or none at all
@@ -189,7 +187,7 @@ function handleKeySearch() {
 function handleRadioButtonClicks(){
   $('.js-filter-switch').change(function() {
     if($('#showAll').prop('checked')) {
-      console.log(`show all clicked`); 
+      //show all clicked
       STORE.showItemLevel = 3;
     } else {
       if($('#showChecked').prop('checked')) {
@@ -208,9 +206,7 @@ function handleRadioButtonClicks(){
 function handleDeleteItemClicked() {
   console.log('`handleDeleteItemClicked` ran')
   $('.js-shopping-list').on('click', `.js-item-delete`, event => {
-    console.log('`handleDeleteItemClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    console.log(`ready to delete ${itemIndex}`);
     STORE.items.splice(itemIndex, 1);
     renderShoppingList();
   });
